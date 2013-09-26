@@ -93,7 +93,7 @@ class warrior:
     def _displayStats(self):
         print "Class: ", self.cls, "\nName: ", self.name, "\nStamina: ", self.stamina, "\nWisdom: ", self.wisdom, "\nIntellect: ",self.intellect, "\nDexterity: ",self.dexterity, "\nStrength: ",self.strength, "\nMiss: ",self.miss,"\nCrit: ",self.crit
     def _abilities(self):
-        print "Heroic Slash(1).  This ability does {0} to {1} damage".format(self.strength,self.strength*4)
+        print "Heroic Slash(1).  This ability does {0} to {1} damage".format(self.strength*2,self.strength*3)
     def _ability0(self):
         damage = random.randrange(self.strength*2,self.strength*3)
         crit = random.randrange(1,100)
@@ -154,7 +154,7 @@ class cleric:
     def _displayStats(self):
         print "Class: ", self.cls, "\nName: ", self.name, "\nStamina: ", self.stamina, "\nWisdom: ", self.wisdom, "\nIntellect: ",self.intellect, "\nDexterity: ",self.dexterity, "\nStrength: ",self.strength, "\nMiss: ",self.miss,"\nCrit: ",self.crit
     def _abilities(self):
-        print "Holy Blow(1).  This ability does {0} to {1} damage.".format(self.strength+self.intellect,(self.strength + self.intellect)*3)
+        print "Holy Blow(1).  This ability does {0} to {1} damage.".format((self.strength+self.intellect)*2,(self.strength + self.intellect)*3)
     def _ability0(self):
         damage = random.randrange((self.strength + self.intellect)*2,(self.strength + self.intellect)*3)
         crit = random.randrange(1,100)
