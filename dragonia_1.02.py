@@ -25,7 +25,8 @@ class warlock:
         self.intellect = 16
         self.dexterity = 9
         self.strength = 7
-        self.health = self.stamina*11
+        self.health = self.stamina*10
+        self.shield = 0
         self.damage = 0
         self.miss = 150/self.intellect
         self.crit = self.intellect
@@ -88,9 +89,9 @@ class warlock:
     def _health(self):
         print "You have {0} health remaining".format(self.health)
     def _level(self):
-        self.stamina += 7
-        self.wisdom += 2
-        self.intellect += 5
+        self.stamina += 6
+        self.wisdom += 3
+        self.intellect += 4
         self.dexterity += 1
         self.strength += 1
         self.health = self.stamina*10
@@ -123,6 +124,7 @@ class mage:
         self.dexterity = 7
         self.strength = 6
         self.health = self.stamina*10
+        self.shield = 0
         self.damage = 0
         self.miss = 150/self.intellect
         self.crit = self.intellect
@@ -135,6 +137,7 @@ class mage:
         print "Class: ", self.cls, "\nName: ", self.name, "\nStamina: ", self.stamina, "\nWisdom: ", self.wisdom, "\nIntellect: ",self.intellect, "\nDexterity: ",self.dexterity, "\nStrength: ",self.strength, "\nMiss: ",self.miss,"\nCrit: ",self.crit
     def _abilities(self):
         print "Fireball(1).  This ability does {0} to {1} damage".format(self.intellect*2,self.intellect*7)
+        print "Barrier(2). This ability creates a magical shield that absorbs {0} to {1} damage.".format(self.intellect+(self.wisdom/2),(self.intellect+(self.wisdom/2))*2)
     def _ability0(self):
         damage = random.randrange(self.intellect*2,self.intellect*7)
         crit = random.randrange(1,100)
@@ -148,8 +151,15 @@ class mage:
         else:
             self.damage = damage
             print 'Your Fireball {0} for {1} damage.'.format(self.dict[random.randrange(0,4)],self.damage)
+    def _ability1(self):
+    	player.damage = 0
+        shield = random.randrange(self.intellect+(self.wisdom/2),(self.intellect+(self.wisdom/2))*2)
+        self.shield = shield
+        print "You create a {0} point shield".format(shield)
+        
     def _health(self):
-        print "You have {0} health remaining".format(self.health)
+        print "You have {0} health and {1} shield remaining".format(self.health, self.shield)
+        
     def _level(self):
         self.stamina += 2
         self.wisdom += 4
@@ -184,6 +194,7 @@ class warrior:
         self.dexterity = 12
         self.strength = 21
         self.health = self.stamina*10
+        self.shield = 0
         self.damage = 0
         self.miss = 100/self.strength
         self.crit = self.strength/1.5
@@ -197,7 +208,7 @@ class warrior:
     def _abilities(self):
         print "Heroic Slash(1).  This ability does {0} to {1} damage".format(self.strength,self.strength*4)
     def _ability0(self):
-        damage = random.randrange(self.strength*2,self.strength*3)
+        damage = random.randrange(self.strength*2,self.strength*4)
         crit = random.randrange(1,100)
         miss = random.randrange(1,100)
         if miss <= self.miss:
@@ -209,6 +220,10 @@ class warrior:
         else:
             self.damage = damage
             print 'Your Heroic Slash {0} for {1} damage.'.format(self.dict[random.randrange(0,5)],self.damage)
+    
+    #def _ability1(self):
+    	
+    
     def _health(self):
         print "You have {0} health remaining".format(self.health)
     def _level(self):
@@ -245,7 +260,9 @@ class cleric:
         self.dexterity = 9
         self.strength = 18
         self.health = self.stamina*10
+        self.shield = 0
         self.damage = 0
+        self.empowered = 0
         self.miss = 100/(self.intellect + self.strength)
         self.crit = (self.wisdom + self.intellect)/1.5
         self.dict = ['cleanses','pierces','glances','devastates','hits','CRITS','misses']
@@ -257,10 +274,18 @@ class cleric:
         print "Class: ", self.cls, "\nName: ", self.name, "\nStamina: ", self.stamina, "\nWisdom: ", self.wisdom, "\nIntellect: ",self.intellect, "\nDexterity: ",self.dexterity, "\nStrength: ",self.strength, "\nMiss: ",self.miss,"\nCrit: ",self.crit
     def _abilities(self):
         print "Holy Blow(1).  This ability does {0} to {1} damage.".format(self.strength+self.intellect,(self.strength + self.intellect)*3)
+        print "Devine Judgment(2). This ability does {0} to {1} damage.".format(self.wisdom*2, self.wisdom*5)
+        print "You enter a state of devine empowerment" 
+        print "adding addition effects to your next attack."
+        print "Holy Blow will deal additional damage and Devine Judgment will heal you."
+        print "   "
     def _ability0(self):
         damage = random.randrange((self.strength + self.intellect)*2,(self.strength + self.intellect)*3)
         crit = random.randrange(1,100)
         miss = random.randrange(1,100)
+        if (self.empowered):
+        	damage = round(damage*1.25,0)
+        	self.empowered = 0
         if miss <= self.miss:
             self.damage = 0
             print "You MISS completely!"
@@ -270,6 +295,28 @@ class cleric:
         else:
             self.damage = damage
             print 'Your Holy Blow {0} for {1} damage.'.format(self.dict[random.randrange(0,5)],self.damage)
+        
+    def _ability1(self):
+    	damage = random.randrange(self.wisdom*2, self.wisdom*5)
+    	crit = random.randrange(1,100)
+    	miss = random.randrange(1,100)
+    	if (self.empowered):
+    		self.health += round(damage*0.8, 0)
+    		self.empowered = 0
+    		print "You are healed for {0}".format(damage*0.8)
+    	else:
+    		self.empowered = 1
+    		print "You feel empowered by a devine force!"
+    	if miss <= self.miss:
+    		self.damage = 0
+    		print "You Missed!"
+    	elif crit <= self.crit:
+    		self.damage = damage * 2
+    		print "Your Devine Judgment CRITS for {0} damage.".format(self.damage)
+    	else:
+    		self.damage = damage
+    		print "Your Devine Judgment deals {0} damage.".format(self.damage)
+    	
     def _health(self):
         print "You have {0} health remaining".format(self.health)
     def _level(self):
@@ -581,6 +628,13 @@ def _damage(chosen_ability):
      eval("player."+chosen_ability)
      enemy.health -= player.damage
      enemy._ability0()
+     if(player.shield):
+         if(player.shield < enemy.damage):
+             enemy.damage -= player.shield
+             player.shield = 0
+         else:
+             player.shield -= enemy.damage
+             enemy.damage = 0
      player.health -= enemy.damage
      player._health()
      enemy._health()
