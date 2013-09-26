@@ -11,6 +11,108 @@ no_enemy = True
 enemies = ['ogre','giant snake','ogre','giant snake','ogre','giant snake','gargoyle','dragon']
 error_messages = ["Robin...no.","You think I'm going to listen to you?","um...what?","Yeah no clue what you're telling me to do.","Stop touching me there.","Will you attack already?","Glares at you.","Siiiiigh.", "You want me to do WHAT?","Sorry I don't roll that way","I would if I could.","NO..NO NO NO NO..NONONONONONONON!"]
 
+
+
+
+
+
+class warlock:
+    def __init__(self,name):
+        self.cls = 'warlock'
+        self.name = name
+        self.stamina = 14
+        self.wisdom = 15
+        self.intellect = 16
+        self.dexterity = 9
+        self.strength = 7
+        self.health = self.stamina*11
+        self.damage = 0
+        self.miss = 150/self.intellect
+        self.crit = self.intellect
+        self.dict = ['drains','depletes','consumes','leeches','hits','CRITS','misses']
+        self.target = 'unknown'
+        self.abilities = ['Power Siphon','Entropic Assault']
+        self.xp = 0
+        self.lvl = 1
+    def _displayStats(self):
+        print "Class: ", self.cls, "\nName: ", self.name, "\nStamina: ", self.stamina, "\nWisdom: ", self.wisdom, "\nIntellect: ",self.intellect, "\nDexterity: ",self.dexterity, "\nStrength: ",self.strength, "\nMiss: ",self.miss,"\nCrit: ",self.crit
+    def _abilities(self):
+        print "Power Siphon(1).  This ability does {0} to {1} damage".format((self.intellect+self.stamina*3/2),((self.intellect+self.stamina)*7/3))
+        print "Heals you for a portion of damage dealt"
+        print "Entropic Assault(2). This ability does {0} to {1} damage".format((self.intellect+self.wisdom+self.stamina)/2,(self.intellect+self.wisdom+self.stamina)*7/2)
+        print "Consumes a portion of you current health. Even if you miss!"
+    def _ability0(self):
+        damage = random.randrange(((self.intellect+self.stamina)*3/2),((self.intellect+self.stamina)*7/3))
+        crit = random.randrange(1,100)
+        miss = random.randrange(1,100)
+        if miss <= self.miss:
+            self.damage = 0
+            print "You MISS completely!"
+        elif crit <= self.crit:
+            self.damage = damage*2
+            heal_control = round(((self.wisdom/2)+((self.stamina*11)/self.health))/3, 0)
+            self.health += (self.damage/5)+heal_control
+            print 'Your Power Siphon {0} for {1} damage.'.format(self.dict[5],self.damage)
+            print 'and heals you for {0}.'.format((self.damage/5)+heal_control)
+            #print '{0},{1}'.format(heal_control,self.health)
+        else:
+            self.damage = damage
+            heal_control = round(((self.wisdom/2)+((self.stamina*11)/self.health))/3, 0)
+            self.health += (damage/6)+heal_control
+            print 'Your Power Siphon {0} for {1} damage.'.format(self.dict[random.randrange(0,4)],self.damage)
+            print 'and heals you for {0}.'.format((damage/6)+heal_control)
+            #print '{0},{1}'.format(heal_control,self.health)
+    def _ability1(self):
+        damage = random.randrange((self.intellect+self.wisdom+self.stamina)/2,(self.intellect+self.wisdom+self.stamina)*7/2)
+        crit = random.randrange(1,100)
+        miss = random.randrange(1,100)
+        sac_hp = round(self.health * (0.17),0)
+        if miss <= self.miss:
+            self.damage = 0
+            #sac_hp = self.health * (0.1)
+            self.health -= sac_hp
+            print "You MISS completely!"
+            print "{0} health consumed.".format(sac_hp)
+        elif crit <= self.crit:
+            self.damage = damage*2
+            #sac_hp = self.health * (0.1)
+            self.health -= sac_hp
+            print "Your Entropic Assault crits for {0} damage.".format(self.damage)
+            print "{0} health consumed.".format(sac_hp)
+        else:
+            self.damage = damage
+            #sac_hp = self.health * (0.1)
+            self.health -= sac_hp
+            print "Your Entropic Assault deals {0} damage.".format(self.damage)
+            print "{0} health consumed.".format(sac_hp)
+    def _health(self):
+        print "You have {0} health remaining".format(self.health)
+    def _level(self):
+        self.stamina += 7
+        self.wisdom += 2
+        self.intellect += 5
+        self.dexterity += 1
+        self.strength += 1
+        self.health = self.stamina*10
+        self.miss = 100/self.intellect
+        self.crit = self.intellect
+        self.lvl += 1
+        print "\nYou've reached level {0}".format(self.lvl)
+    def _sword(self):
+        self.intellect += 30
+    def _offhand(self):
+        self.stamina += 10
+    def _belt(self):
+        self.stamina += 2
+    def _cloak(self):
+        self.stamina += 20
+    def _trinket(self):
+        self.intellect += 45
+    def _legendary_weapon(self):
+        self.intellect += 100
+
+
+
 class mage:
     def __init__(self,name):
         self.cls = 'mage'
@@ -93,7 +195,7 @@ class warrior:
     def _displayStats(self):
         print "Class: ", self.cls, "\nName: ", self.name, "\nStamina: ", self.stamina, "\nWisdom: ", self.wisdom, "\nIntellect: ",self.intellect, "\nDexterity: ",self.dexterity, "\nStrength: ",self.strength, "\nMiss: ",self.miss,"\nCrit: ",self.crit
     def _abilities(self):
-        print "Heroic Slash(1).  This ability does {0} to {1} damage".format(self.strength*2,self.strength*3)
+        print "Heroic Slash(1).  This ability does {0} to {1} damage".format(self.strength,self.strength*4)
     def _ability0(self):
         damage = random.randrange(self.strength*2,self.strength*3)
         crit = random.randrange(1,100)
@@ -154,7 +256,7 @@ class cleric:
     def _displayStats(self):
         print "Class: ", self.cls, "\nName: ", self.name, "\nStamina: ", self.stamina, "\nWisdom: ", self.wisdom, "\nIntellect: ",self.intellect, "\nDexterity: ",self.dexterity, "\nStrength: ",self.strength, "\nMiss: ",self.miss,"\nCrit: ",self.crit
     def _abilities(self):
-        print "Holy Blow(1).  This ability does {0} to {1} damage.".format((self.strength+self.intellect)*2,(self.strength + self.intellect)*3)
+        print "Holy Blow(1).  This ability does {0} to {1} damage.".format(self.strength+self.intellect,(self.strength + self.intellect)*3)
     def _ability0(self):
         damage = random.randrange((self.strength + self.intellect)*2,(self.strength + self.intellect)*3)
         crit = random.randrange(1,100)
@@ -472,10 +574,11 @@ def _abilities():
     player._abilities()
     sys.stdout.flush()
 
-def _damage():
+def _damage(chosen_ability):
      global _exit
      print ""
-     player._ability0()
+     #player._ability0()
+     eval("player."+chosen_ability)
      enemy.health -= player.damage
      enemy._ability0()
      player.health -= enemy.damage
@@ -519,7 +622,9 @@ def _attack(enemy):
     player._abilities()
     inpute = raw_input(">>> ")
     if int(inpute) == 1:
-        _damage()
+        _damage("_ability0()")
+    elif int(inpute) == 2:
+        _damage("_ability1()")
     sys.stdout.flush()
             
 def _dance():
@@ -537,7 +642,7 @@ def _reset():
     _exit = False
     
 while running != False:
-    print "\nPlease choose your class: Mage (1), Warrior (2), Cleric(3)"
+    print "\nPlease choose your class: Mage (1), Warrior (2), Cleric(3), Warlock(4)"
     while chosen != True:
         _exit = False
         try:
@@ -558,6 +663,11 @@ while running != False:
                 player = cleric(my_name)
                 chosen = True
             elif int(_class) is 4:
+                print "Enter your adventurer's name"
+                my_name = raw_input(">>> ")
+                player = warlock(my_name)
+                chosen = True
+            elif int(_class) is 5:
                 running = False
                 chosen = True
             else:
